@@ -9,6 +9,7 @@ class Ball : public sf::CircleShape {
 
 private:
 	float mass;
+	sf::Vector2f previousVelocity;
 	sf::Vector2f velocity;
 
 public:
