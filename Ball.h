@@ -19,6 +19,7 @@ public:
 	float kineticEnergy();
 	float gravitationalPotentialEnergy(int windowWidth, int windowHeight, sf::Vector2f gField);
 	float mechanicalEnergy(int windowWidth, int windowHeight, sf::Vector2f gField);
+	sf::Vector2f getCenterCoordinates();
 };
 
 #endif

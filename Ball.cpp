@@ -15,8 +15,62 @@ void Ball::updateState(float elapsedTime, sf::Vector2f gField, int windowWidth, 
 	velocity.x += gField.x * elapsedTime;
 	velocity.y += gField.y * elapsedTime;
 
-	this->setPosition(this->getPosition() + ((velocity + previousVelocity) / 2.f * elapsedTime));
-	checkCollision(windowWidth, windowHeight);
+	sf::Vector2f position = this->getPosition();
+	float radius = this->getRadius();
+
+	sf::Vector2f destinedPosition = position + ((velocity + previousVelocity) / 2.f * elapsedTime);
+	sf::Vector2f velocityAtCollision = previousVelocity;
+	float timeOfCollision;
+
+	if (destinedPosition.x <= 0 && destinedPosition.y <= 0){
+		//top left
+	}else if(destinedPosition.x <= 0 && destinedPosition.y + 2*radius >= windowHeight){
+		//bottom left
+	}else if(destinedPosition.x + 2*radius >= windowWidth && destinedPosition.y <= 0){
+		//top right
+	}else if(destinedPosition.x + 2*radius >= windowWidth && destinedPosition.y + 2*radius >= windowHeight){
+		//bottom right
+	}else if (destinedPosition.x <= 0){
+		//only left bound
+		destinedPosition.y = destinedPosition.y;
+		destinedPosition.x = -(destinedPosition.x);
+		timeOfCollision =  -(position.x) / ((velocity.x + previousVelocity.x) / 2.f);
+		velocityAtCollision.x += gField.x * timeOfCollision;
+		velocity.x = -(velocityAtCollision.x - (velocity.x - velocityAtCollision.x));
+	}else if (destinedPosition.x + 2*radius >= windowWidth){
+		//only right bound
+		destinedPosition.y = destinedPosition.y;
+		destinedPosition.x = windowWidth - (destinedPosition.x + 2*radius - windowWidth) - 2*radius;
+		timeOfCollision = (windowWidth - (position.x + 2*radius)) / ((velocity.x + previousVelocity.x) / 2.f);
+		velocityAtCollision.x += gField.x * timeOfCollision;
+		velocity.x = -(velocityAtCollision.x - (velocity.x - velocityAtCollision.x));
+	}else if (destinedPosition.y <= 0){
+		//only upper bound
+		destinedPosition.x = destinedPosition.x;
+		destinedPosition.y = -(destinedPosition.y);
+		timeOfCollision =  -(position.y) / ((velocity.y + previousVelocity.y) / 2.f);
+		velocityAtCollision.y += gField.y * timeOfCollision;
+		velocity.y = -(velocityAtCollision.y - (velocity.y - velocityAtCollision.y));
+	}else if (destinedPosition.y + 2*radius >= windowHeight){
+		//only lower bound
+		//std::cout << "previousVelocity.y : " << previousVelocity.y <<std::endl;
+		//std::cout << "velocity.y : " << velocity.y <<std::endl;
+		//std::cout << "position.y : " << position.y <<std::endl;
+		//std::cout << "destinedPosition.y : " << destinedPosition.y <<std::endl;
+		destinedPosition.x = destinedPosition.x;
+		destinedPosition.y = windowHeight - (destinedPosition.y + 2*radius - windowHeight) - 2*radius;
+		timeOfCollision = (windowHeight - (position.y + 2*radius)) / ((velocity.y + previousVelocity.y) / 2.f);
+		velocityAtCollision.y += gField.y * timeOfCollision;
+		velocity.y = -(velocityAtCollision.y - (velocity.y - velocityAtCollision.y));
+		//previousVelocity.y = 123123123123123123;
+		//std::cout << "elapsedTime : " << elapsedTime <<std::endl;
+		//std::cout << "timeOfCollision : " <<timeOfCollision <<std::endl;
+		//std::cout << "velocityAtCollision.y : " << velocityAtCollision.y <<std::endl;
+		//std::cout << "velocity.y : " << velocity.y <<std::endl;
+	}
+
+	this->setPosition(destinedPosition);
+	//checkCollision(windowWidth, windowHeight);
 }
 
 void Ball::checkCollision(int windowWidth, int windowHeight){
@@ -60,4 +114,9 @@ float Ball::gravitationalPotentialEnergy(int windowWidth, int windowHeight, sf::
 
 float Ball::mechanicalEnergy(int windowWidth, int windowHeight, sf::Vector2f gField){
 	return this->kineticEnergy() + this->gravitationalPotentialEnergy(windowWidth, windowHeight, gField);
+}
+
+sf::Vector2f Ball::getCenterCoordinates(){
+	float radius = getRadius();
+	return getPosition() + sf::Vector2f(radius, radius);
 }
