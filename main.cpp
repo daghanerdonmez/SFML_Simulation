@@ -12,17 +12,16 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(width, height), "");
 
-    sf::Vector2f gravity(0.f, 100);
+    sf::Vector2f gravity(100.f, 50);
 
-    Ball ball(1.f, 50.f);
+    Ball ball(1.f, 5.f, sf::Vector2f(100.f, 100.f), sf::Vector2f(0.f, 0.f));
     ball.setFillColor(sf::Color::Blue);
-    ball.setPosition(50,50);
 
     sf::Clock clock;
 
-    //window.setFramerateLimit(500);
+    window.setFramerateLimit(60);
 
-    void updateScene(float elapsedTime);
+    //void updateScene(float elapsedTime);
 
     while (window.isOpen())
     {
@@ -35,7 +34,7 @@ int main()
 
         float currentTime = clock.restart().asSeconds();
         float fps = 1.0f / currentTime;
-        window.setTitle(std::to_string(fps));
+        window.setTitle("FPS: " + std::to_string(fps));
         //std::cout << "FPS: " << fps << std::endl;
 
         ball.updateState(currentTime, gravity, width, height);

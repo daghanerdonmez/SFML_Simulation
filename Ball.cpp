@@ -1,12 +1,11 @@
 #include "Ball.h"
 #include "MyMath.h"
 
-Ball::Ball(float mass, float radius, std::size_t pointCount) 
+Ball::Ball(float mass, float radius, sf::Vector2f initialPosition, sf::Vector2f initialVelocity, std::size_t pointCount)
     : sf::CircleShape(radius, pointCount) {
-    	previousVelocity.x = 0.f;
-    	previousVelocity.y = 0.f;
-    	velocity.x = 0.f;
-    	velocity.y = 0.f;
+    	previousVelocity = initialVelocity;
+    	velocity = initialVelocity;
+    	this -> setPosition(initialPosition);
     	this->mass = mass;
 }
 
@@ -25,23 +24,29 @@ void Ball::checkCollision(int windowWidth, int windowHeight){
 	float radius = this->getRadius();
 
 	if (position.x <= 0){
-		position.x = 0;
+		//position.x = 0;
 		velocity.x = -velocity.x;
 		previousVelocity.x = -previousVelocity.x;
 	}else if (position.x + 2*radius >= windowWidth){
-		position.x = windowWidth - 2*radius;
+		//position.x = windowWidth - 2*radius;
 		velocity.x = -velocity.x;
 		previousVelocity.x = -previousVelocity.x;
 	}
 	if (position.y <= 0){
-		position.y = 0;
+		//position.y = 0;
 		velocity.y = -velocity.y;
 		previousVelocity.y = -previousVelocity.y;
 	}else if (position.y + 2*radius >= windowHeight){
-		position.y = windowHeight - 2*radius;
+		//position.y = windowHeight - 2*radius;
 		velocity.y = -velocity.y;
 		previousVelocity.y = -previousVelocity.y;
 	}
+
+	//this->setPosition(position);
+	//the position update in this function messes up with the
+	//conservation of energy so I commented it out for now
+	//however without it high velocities are a problem.
+	//objects can glitch into walls.
 }
 
 float Ball::kineticEnergy(){
